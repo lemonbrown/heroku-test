@@ -1,11 +1,37 @@
 version: 2.1
 
 orbs:
-  welcome:circleci/welcome-orb@0.4.1
-
+  heroku: circleci/heroku@0.0.10 # Invoke the Heroku orb
+ 
 workflows:
-
-  welcome:
-    
+  heroku_deploy:
     jobs:
-      - welcome/run
+      - build
+      - heroku/deploy-via-git: # Use the pre-configured job, deploy-via-git
+          requires:
+            - build
+          filters:
+            branches:
+              only: main
+  
+jobs:
+  build:
+    docker:
+      - image: circleci/node:15.3.0
+    parallelism: 1
+    working_directory: ~/gondola/heroku-test
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/gondola/connect-four-vue
+      - restore_cache:
+          key: v1-yarn-{{ checksum "yarn.lock" }}
+      - run: yarn install
+      - save_cache:
+          key: v1-yarn-{{ checksum "yarn.lock" }}
+          paths:
+            - ./node_modules
+      - run: yarn build
+      - persist_to_workspace:
+          root: .
+          paths: dist
