@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # client
 
 ## Project setup
@@ -23,6 +22,3 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
-=======
-# heroku-test
->>>>>>> a1f875406dbfc7bfe210515ad50e86f7caa2eb46
